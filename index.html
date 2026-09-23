@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InfluencedStudioCo Clock</title>
+  <style>
+    :root {
+      --cream: #f5f2eb;
+      --paper: #fffaf4;
+      --blush: #e8b2ad;
+      --peach: #efc6aa;
+      --espresso: #2c2927;
+      --cocoa: #765349;
+      --gold: #c59245;
+      --sage: #83936e;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      padding: 18px;
+      overflow: hidden;
+      background: transparent;
+      font-family: Arial, sans-serif;
+    }
+
+    .clock-shell {
+      width: min(88vw, 88vh, 500px);
+      aspect-ratio: 1;
+      filter: drop-shadow(0 18px 24px rgba(44, 41, 39, 0.18));
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hand {
+      stroke-linecap: round;
+    }
+  </style>
+</head>
+<body>
+  <main class="clock-shell">
+    <svg viewBox="0 0 500 500" role="img" aria-label="Analog clock showing the current time">
+      <defs>
+        <radialGradient id="faceGradient" cx="34%" cy="25%" r="78%">
+          <stop offset="0%" stop-color="#fffdf8"/>
+          <stop offset="55%" stop-color="#fff4e8"/>
+          <stop offset="100%" stop-color="#f5d8cf"/>
+        </radialGradient>
+      </defs>
+
+      <circle cx="250" cy="250" r="232" fill="#e8b2ad" stroke="#2c2927" stroke-width="4"/>
+      <circle cx="250" cy="250" r="219" fill="url(#faceGradient)" stroke="#fffaf4" stroke-width="10"/>
+      <circle cx="250" cy="250" r="205" fill="none" stroke="#765349" stroke-opacity="0.45" stroke-width="2"/>
+
+      <g id="ticks"></g>
+
+      <g fill="#2c2927" font-family="Georgia, serif" font-size="30" font-weight="700" text-anchor="middle">
+        <text x="250" y="81">12</text>
+        <text x="422" y="261">3</text>
+        <text x="250" y="442">6</text>
+        <text x="78" y="261">9</text>
+      </g>
+
+      <text x="250" y="174" fill="#765349" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="2.5" text-anchor="middle">INFLUENCEDSTUDIOCO</text>
+      <text x="165" y="335" fill="#e8b2ad" font-family="Georgia, serif" font-size="27" text-anchor="middle">♥</text>
+      <text x="347" y="175" fill="#c59245" font-family="Georgia, serif" font-size="23" text-anchor="middle">✦</text>
+      <circle cx="343" cy="330" r="9" fill="#83936e" fill-opacity="0.48"/>
+
+      <line id="hour" class="hand" x1="250" y1="250" x2="250" y2="157" stroke="#2c2927" stroke-width="13"/>
+      <line id="minute" class="hand" x1="250" y1="250" x2="250" y2="119" stroke="#765349" stroke-width="8"/>
+      <line id="second" class="hand" x1="250" y1="276" x2="250" y2="104" stroke="#c59245" stroke-width="4"/>
+
+      <circle cx="250" cy="250" r="14" fill="#e8b2ad" stroke="#2c2927" stroke-width="5"/>
+      <circle cx="250" cy="250" r="4" fill="#fffaf4"/>
+    </svg>
+  </main>
+
+  <script>
+    const svgNamespace = "http://www.w3.org/2000/svg";
+    const ticks = document.getElementById("ticks");
+
+    for (let minute = 0; minute < 60; minute += 1) {
+      const tick = document.createElementNS(svgNamespace, "line");
+      const major = minute % 5 === 0;
+      tick.setAttribute("x1", "250");
+      tick.setAttribute("y1", major ? "48" : "54");
+      tick.setAttribute("x2", "250");
+      tick.setAttribute("y2", major ? "67" : "62");
+      tick.setAttribute("stroke", major ? "#2c2927" : "#765349");
+      tick.setAttribute("stroke-width", major ? "5" : "2");
+      tick.setAttribute("stroke-linecap", "round");
+      tick.setAttribute("transform", `rotate(${minute * 6} 250 250)`);
+      ticks.appendChild(tick);
+    }
+
+    const hourHand = document.getElementById("hour");
+    const minuteHand = document.getElementById("minute");
+    const secondHand = document.getElementById("second");
+
+    function setTime() {
+      const now = new Date();
+      const seconds = now.getSeconds();
+      const minutes = now.getMinutes() + seconds / 60;
+      const hours = (now.getHours() % 12) + minutes / 60;
+
+      hourHand.setAttribute("transform", `rotate(${hours * 30} 250 250)`);
+      minuteHand.setAttribute("transform", `rotate(${minutes * 6} 250 250)`);
+      secondHand.setAttribute("transform", `rotate(${seconds * 6} 250 250)`);
+    }
+
+    setTime();
+    window.setInterval(setTime, 1000);
+  </script>
+</body>
+</html>
